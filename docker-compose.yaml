@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+
+  mongodb:
+    image: mongodb
+    build: ./mongodb
+    ports:
+    - 27017:27017
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=user
+    - MONGO_INITDB_ROOT_PASSWORD=password
+
+  clickhouse:
+    image: clickhouse
+    build: ./clickhouse
+    ports:
+    - 8123:8123 # http port
+    - 9000:9000 # tcp/native port
+
+  redis:
+    image: redis
+    ports:
+    - 6379:6379
+
+  fastapi:
+    image: fastapi
+    build: ./fastapi
+    volumes:
+      - ./fastapi:/app
+    ports:
+      - 8000:8000
+    depends_on: 
+      - mongodb
+      - clickhouse
+      - redis
+    environment:
+      - MONGODB_URL=mongodb://user:password@mongodb:27017
+      - CLICKHOUSE_URL=clickhouse
+      - REDIS_URL=redis://redis
+      # Replace the SECRET_KEY with a new one. Use this command in a bash terminal: openssl rand -hex 32
+      - SECRET_KEY=02c0251715f94313f47ba9cf7309dc2956ff2604a87518c7c8fb338db9df75ca
+      - PORT=8000
+    command:
+      - "/start-reload.sh" # reload automatically on changes
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana
+    build: ./grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - 3000:3000

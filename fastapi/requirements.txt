@@ -1,0 +1,30 @@
+# database connection
+motor
+clickhouse-sqlalchemy
+
+# data validation
+pydantic[email]
+
+# hashing
+passlib[bcrypt]
+
+# JWT tokens
+python-jose
+
+# form data
+python-multipart
+
+# templating
+jinja2
+
+# request limiter
+fastapi-limiter
+
+# caching
+fastapi-cache2[redis]
+
+# monitoring
+prometheus-fastapi-instrumentator
+
+# testing
+pytest
