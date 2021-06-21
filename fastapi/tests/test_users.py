@@ -13,13 +13,6 @@ def test_list_users():
     response = requests.get(base_url + "/users")
     assert response.status_code == 200
 
-def test_create_user_with_wrong_format():
-    user = {
-        "wrongkey": 0
-    }
-    response = requests.post(f"{base_url}/users", data=user)
-    assert response.status_code == 422
-
 def test_create_user_without_token():
     user = {
         "id": id,
@@ -47,6 +40,14 @@ def test_login_token():
     auth_token = response.json()['access_token']
     headers = {"Authorization": f"Bearer {auth_token}"}
     assert response.status_code == 200
+
+def test_create_user_with_wrong_format():
+    global headers
+    user = {
+        "wrongkey": 0
+    }
+    response = requests.post(f"{base_url}/users", data=user, headers=headers)
+    assert response.status_code == 422
 
 def test_create_user():
     global headers
