@@ -54,7 +54,7 @@ Some screenshots of the running app:
 
 ![Locust](images/locust.png "Locust")
 
-![Docker Compose Logs](images/docker_compose_logs.png "LocDocker Compose Logsust")
+![Docker Compose Logs](images/docker_compose_logs.png "Docker Compose Logs")
 
 ## Build and start
 
@@ -95,6 +95,7 @@ And open your browser at [http://localhost:8089](http://localhost:8089)
 - Splunk integration (for advanced log analysis)
 - Docker scan (vulnerability scanning)
 - Sonarcube (code quality and security)
+- LDAPS server integration
 - Horizhontal scaling (distribute load across multiple instances)
 - CD/CI with Jenkins (build and integration automation)
 - Code coverage (measurement of the executed code while testing)
