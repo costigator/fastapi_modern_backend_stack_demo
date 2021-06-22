@@ -8,5 +8,4 @@ templates = Jinja2Templates(directory="templates")
 
 @webapp_router.get("/")
 def home(request: Request):
-    print(dir(request))
     return templates.TemplateResponse("homepage.html", {"request": request})
