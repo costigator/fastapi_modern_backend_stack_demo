@@ -3,27 +3,32 @@ version: "3.8"
 services:
 
   mongodb:
+    container_name: mongodb
     image: mongodb
     build: ./mongodb
     ports:
-    - 27017:27017
+      - 27017:27017
     environment:
-    - MONGO_INITDB_ROOT_USERNAME=user
-    - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
 
   clickhouse:
-    image: clickhouse
+    container_name: clickhouse
     build: ./clickhouse
     ports:
-    - 8123:8123 # http port
-    - 9000:9000 # tcp/native port
+      - 8123:8123 # http port
+      - 9000:9000 # tcp/native port
+    environment: 
+      - SPLUNK_FORWARD_SERVER=splunkserver:9997
 
   redis:
+    container_name: redis
     image: redis
     ports:
-    - 6379:6379
+      - 6379:6379
 
   fastapi:
+    container_name: fastapi
     image: fastapi
     build: ./fastapi
     volumes:
@@ -45,6 +50,7 @@ services:
       - "/start-reload.sh" # reload automatically on changes
 
   prometheus:
+    container_name: prometheus
     image: prom/prometheus
     volumes:
       - ./prometheus/:/etc/prometheus/
@@ -54,6 +60,7 @@ services:
       - 9090:9090
 
   grafana:
+    container_name: grafana
     image: grafana/grafana
     build: ./grafana
     environment:
@@ -62,3 +69,14 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
     ports:
       - 3000:3000
+
+  splunkserver:
+    container_name: splunkserver
+    image: splunk/splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_STANDALONE_URL=splunkserver
+      - SPLUNK_PASSWORD=password
+      - SPLUNK_ENABLE_LISTEN=9997
+    ports:
+      - 8001:8000
